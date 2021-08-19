@@ -1,0 +1,244 @@
+diff --git a/package.json b/package.json
+index 2ed7b5277aa..9834cc1f341 100644
+--- a/package.json
++++ b/package.json
+@@ -61,6 +61,7 @@
+     "@vscode/vscode-languagedetection": "1.0.15",
+     "applicationinsights": "1.0.8",
+     "chokidar": "3.5.1",
++    "glasstron": "0.1.0",
+     "graceful-fs": "4.2.6",
+     "http-proxy-agent": "^2.1.0",
+     "https-proxy-agent": "^2.2.3",
+diff --git a/src/cssloader.js b/src/cssloader.js
+new file mode 100644
+index 00000000000..93796789beb
+--- /dev/null
++++ b/src/cssloader.js
+@@ -0,0 +1,58 @@
++/*
++ *  Copyright (c) 2021 Xaryphon
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy
++ * of this software and associated documentation files (the "Software"), to deal
++ * in the Software without restriction, including without limitation the rights
++ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++ * copies of the Software, and to permit persons to whom the Software is
++ * furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in all
++ * copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ */
++
++//@ts-check
++'use strict';
++
++const config = require('./cssloader_config');
++
++function _executeInRenderer(webContents, method, ...params) {
++	if (method.name.length !== 0)
++		method = method.toString().replace(method.name, "function").replace("function function", "function");
++	else method = method.toString();
++	return webContents.executeJavaScript(`(${method})(...${JSON.stringify(params)});`);
++}
++
++function _loadCss(win, config) {
++	if (!config.valid) {
++		console.log(config.error_message);
++		return;
++	}
++	if (typeof win._customcss === "undefined") {
++		win._customcss = document.createElement("link");
++		win._customcss.id = "custom-css";
++		win._customcss.rel = "stylesheet";
++		win._customcss.href = config.csspath;
++		document.head.appendChild(win._customcss);
++		console.log("[CSSLoader] Loaded", config.csspath);
++	}
++}
++
++function _injectCss(win) {
++	_executeInRenderer(win.webContents, _loadCss, win, config);
++}
++
++module.exports.inject = function (win) {
++	//const cssPath = path.join(app.getPath('userData'), 'extensions', 'cssloader.css');
++	//const cssPath = path.resolve("/home/xaryphon/.vscode-oss-dev/extensions/cssloader.css");
++	win.webContents.on("dom-ready", () => { _injectCss(win); });
++}
+diff --git a/src/cssloader_config.js b/src/cssloader_config.js
+new file mode 100644
+index 00000000000..930c53a91c9
+--- /dev/null
++++ b/src/cssloader_config.js
+@@ -0,0 +1,58 @@
++/*
++ *  Copyright (c) 2021 Xaryphon
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy
++ * of this software and associated documentation files (the "Software"), to deal
++ * in the Software without restriction, including without limitation the rights
++ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++ * copies of the Software, and to permit persons to whom the Software is
++ * furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in all
++ * copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ */
++
++const { app } = require('electron');
++const path = require('path');
++const fs = require('fs');
++
++const config_path = path.join(app.getPath('appData'), 'CustomCssLoader', app.getName() + '.json');
++
++var config = {};
++
++try {
++	const config_data = fs.readFileSync(config_path, { encoding: 'utf8', flag: 'r' });
++	const config_json = JSON.parse(config_data);
++	if (typeof config_json.csspath !== 'undefined')
++		config.csspath = config_json.csspath.replace(/^~\//, app.getPath('home') + '/');
++
++	config.blur = config_json.blur;
++	config.winprops = config_json.winprops;
++	config.valid = true;
++} catch (e) {
++	config.error_message = '[CSSLoader] ' + [
++		'Unable to read config!',
++		e,
++		'Create a config file ' + config_path,
++		'{',
++		'\t// Path to a css file to load to all windows',
++		'\t"csspath": "~/path/to/css",',
++		'\t// (Linux) Whether to blur the window',
++		'\t"blur": <bool>,',
++		'\t// Window Properties',
++		'\t"winprops": {...},',
++		'}',
++		'The CSS file must be inside a vscode whitelisted directory. (i.e. extensions)'
++	].join('\n[CSSLoader] ');
++	config.valid = false;
++}
++
++module.exports = config
+diff --git a/src/glasscord_browser_window.js b/src/glasscord_browser_window.js
+new file mode 100644
+index 00000000000..06ba32b62dd
+--- /dev/null
++++ b/src/glasscord_browser_window.js
+@@ -0,0 +1,53 @@
++/*
++   Copyright 2020 AryToNeX
++
++   Licensed under the Apache License, Version 2.0 (the 'License');
++   you may not use this file except in compliance with the License.
++   You may obtain a copy of the License at
++
++	   http://www.apache.org/licenses/LICENSE-2.0
++
++   Unless required by applicable law or agreed to in writing, software
++   distributed under the License is distributed on an 'AS IS' BASIS,
++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++   See the License for the specific language governing permissions and
++   limitations under the License.
++*/
++
++//@ts-check
++'use strict';
++
++const electron = require('electron');
++const glasstron = require('glasstron');
++const cssloader = require('./cssloader');
++const config = require('./cssloader_config');
++
++/*
++ * The BrowserWindow override class
++ */
++class BrowserWindow extends electron.BrowserWindow {
++	// @ts-ignore
++	constructor(options) {
++		if (process.platform !== 'win32') {
++			options.transparent = true;
++		}
++		options.backgroundColor = '#00000000';
++
++		// We do not call super to get an actual BrowserWindow from electron and not mess with native casts (broke GTK modals)
++		const window = new glasstron.BrowserWindow(options);
++
++		if (config.valid) {
++			Object.assign(window, config.winprops);
++			if (config.blur)
++				window.setBlur(true);
++		}
++		else {
++			console.log(config.error_message);
++		}
++
++		cssloader.inject(window);
++		return window;
++	}
++}
++
++module.exports = BrowserWindow;
+diff --git a/src/main.js b/src/main.js
+index 9cf737e0649..12dbfcfaaff 100644
+--- a/src/main.js
++++ b/src/main.js
+@@ -70,6 +70,40 @@ if (portable && portable.isPortable) {
+ 	app.setAppLogsPath(path.join(userDataPath, 'logs'));
+ }
+ 
++function injectGlasscordClass() {
++	// Replacing BrowserWindow with our wrapper class
++	const electron = require('electron');
++	const BrowserWindow = require('./glasscord_browser_window');
++	const electronPath = require.resolve('electron');
++	const newElectron = Object.assign({}, electron, { BrowserWindow }); // Create new electron object
++
++	delete require.cache[electronPath].exports; // Delete exports
++	require.cache[electronPath].exports = newElectron; // Assign the exports as the new electron
++
++	if (require.cache[electronPath].exports !== newElectron) {
++		console.log('Something\'s wrong! Glasscord can\'t be injected properly!');
++	}
++}
++
++function delayReadyEvent(milliseconds) { // from Zack, blame Electron
++	if (milliseconds === 0) return;
++	const electron = require('electron');
++	const originalEmit = electron.app.emit;
++	electron.app.emit = function patchedEmit(event, ...args) {
++		if (event !== "ready") return Reflect.apply(originalEmit, this, arguments);
++		setTimeout(() => {
++			electron.app.emit = originalEmit;
++			electron.app.emit("ready", ...args);
++		}, milliseconds);
++	};
++}
++
++if (process.platform === 'linux') {
++	app.commandLine.appendSwitch('use-gl', 'desktop');
++	delayReadyEvent(500);
++}
++injectGlasscordClass();
++
+ // Register custom schemes with privileges
+ protocol.registerSchemesAsPrivileged([
+ 	{

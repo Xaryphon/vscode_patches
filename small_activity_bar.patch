@@ -1,0 +1,126 @@
+diff --git a/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts b/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts
+index 3d930dcfa51..9f9cbe9c4b6 100644
+--- a/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts
++++ b/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts
+@@ -447,10 +447,10 @@ registerThemingParticipant((theme, collector) => {
+ 			.monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .action-item:before {
+ 				content: "";
+ 				position: absolute;
+-				top: 9px;
+-				left: 9px;
+-				height: 32px;
+-				width: 32px;
++				top: 5px;
++				left: 5px;
++				height: 24px;
++				width: 24px;
+ 				z-index: 1;
+ 			}
+ 
+diff --git a/src/vs/workbench/browser/parts/activitybar/activitybarPart.ts b/src/vs/workbench/browser/parts/activitybar/activitybarPart.ts
+index 87c2500332b..f2a79d18fde 100644
+--- a/src/vs/workbench/browser/parts/activitybar/activitybarPart.ts
++++ b/src/vs/workbench/browser/parts/activitybar/activitybarPart.ts
+@@ -78,7 +78,7 @@ export class ActivitybarPart extends Part implements IActivityBarService {
+ 
+ 	private static readonly PINNED_VIEW_CONTAINERS = 'workbench.activity.pinnedViewlets2';
+ 	private static readonly PLACEHOLDER_VIEW_CONTAINERS = 'workbench.activity.placeholderViewlets';
+-	private static readonly ACTION_HEIGHT = 48;
++	private static readonly ACTION_HEIGHT = 32;
+ 	private static readonly ACCOUNTS_ACTION_INDEX = 0;
+ 
+ 	private static readonly GEAR_ICON = registerIcon('settings-view-bar-icon', Codicon.settingsGear, localize('settingsViewBarIcon', "Settings icon in the view bar."));
+@@ -86,8 +86,8 @@ export class ActivitybarPart extends Part implements IActivityBarService {
+ 
+ 	//#region IView
+ 
+-	readonly minimumWidth: number = 48;
+-	readonly maximumWidth: number = 48;
++	readonly minimumWidth: number = 32;
++	readonly maximumWidth: number = 32;
+ 	readonly minimumHeight: number = 0;
+ 	readonly maximumHeight: number = Number.POSITIVE_INFINITY;
+ 
+@@ -653,9 +653,9 @@ export class ActivitybarPart extends Part implements IActivityBarService {
+ 			const iconClass = `.monaco-workbench .activitybar .monaco-action-bar .action-label.${cssClass}`;
+ 			createCSSRule(iconClass, `
+ 				mask: ${cssUrl} no-repeat 50% 50%;
+-				mask-size: 24px;
++				mask-size: 16px;
+ 				-webkit-mask: ${cssUrl} no-repeat 50% 50%;
+-				-webkit-mask-size: 24px;
++				-webkit-mask-size: 16px;
+ 			`);
+ 		} else if (ThemeIcon.isThemeIcon(icon)) {
+ 			cssClass = ThemeIcon.asClassName(icon);
+diff --git a/src/vs/workbench/browser/parts/activitybar/media/activityaction.css b/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
+index 7e7220197ed..d5a75d5a0a7 100644
+--- a/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
++++ b/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
+@@ -12,7 +12,7 @@
+ .monaco-workbench .activitybar > .content .composite-bar > .monaco-action-bar .action-item::after {
+ 	position: absolute;
+ 	content: '';
+-	width: 48px;
++	width: 32px;
+ 	height: 2px;
+ 	display: block;
+ 	background-color: transparent;
+@@ -56,8 +56,8 @@
+ 	z-index: 1;
+ 	display: flex;
+ 	overflow: hidden;
+-	width: 48px;
+-	height: 48px;
++	width: 32px;
++	height: 32px;
+ 	margin-right: 0;
+ 	box-sizing: border-box;
+ 
+@@ -66,11 +66,11 @@
+ .monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .action-label:not(.codicon) {
+ 	font-size: 15px;
+ 	line-height: 40px;
+-	padding: 0 0 0 48px;
++	padding: 0 0 0 32px;
+ }
+ 
+ .monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .action-label.codicon {
+-	font-size: 24px;
++	font-size: 16px;
+ 	align-items: center;
+ 	justify-content: center;
+ }
+@@ -138,8 +138,8 @@
+ 
+ .monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .badge .badge-content {
+ 	position: absolute;
+-	top: 24px;
+-	right: 8px;
++	top: 16px;
++	right: 2px;
+ 	font-size: 9px;
+ 	font-weight: 600;
+ 	min-width: 8px;
+@@ -168,7 +168,7 @@
+ 
+ .monaco-workbench .activitybar.right > .content :not(.monaco-menu) > .monaco-action-bar .action-label:not(.codicon) {
+ 	margin-left: 0;
+-	padding: 0 48px 0 0;
++	padding: 0 32px 0 0;
+ 	background-position: calc(100% - 9px) center;
+ }
+ 
+diff --git a/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css b/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
+index 169ba8a11f0..0095c3e8bb0 100644
+--- a/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
++++ b/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
+@@ -4,7 +4,7 @@
+  *--------------------------------------------------------------------------------------------*/
+ 
+ .monaco-workbench .part.activitybar {
+-	width: 48px;
++	width: 32px;
+ 	height: 100%;
+ }
+ 

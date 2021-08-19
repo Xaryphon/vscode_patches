@@ -1,0 +1,12 @@
+diff --git a/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts b/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts
+index ae036d1b7f3..40efdbc763d 100644
+--- a/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts
++++ b/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts
+@@ -571,6 +571,7 @@ export class TerminalInstance extends Disposable implements ITerminalInstance {
+ 			altClickMovesCursor: config.altClickMovesCursor && editorOptions.multiCursorModifier === 'alt',
+ 			scrollback: config.scrollback,
+ 			theme: this._getXtermTheme(),
++			allowTransparency: true,
+ 			drawBoldTextInBrightColors: config.drawBoldTextInBrightColors,
+ 			fontFamily: font.fontFamily,
+ 			fontWeight: config.fontWeight,
