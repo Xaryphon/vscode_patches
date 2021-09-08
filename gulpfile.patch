@@ -1,5 +1,3 @@
-diff --git a/build/gulpfile.vscode.js b/build/gulpfile.vscode.js
-index ad0e4717a66..3805fd0347c 100644
 --- a/build/gulpfile.vscode.js
 +++ b/build/gulpfile.vscode.js
 @@ -44,6 +44,9 @@ const vscodeEntryPoints = _.flatten([

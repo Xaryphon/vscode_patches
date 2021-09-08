@@ -1,5 +1,3 @@
-diff --git a/package.json b/package.json
-index 2ed7b5277aa..9834cc1f341 100644
 --- a/package.json
 +++ b/package.json
 @@ -61,6 +61,7 @@
@@ -10,9 +8,7 @@ index 2ed7b5277aa..9834cc1f341 100644
      "graceful-fs": "4.2.6",
      "http-proxy-agent": "^2.1.0",
      "https-proxy-agent": "^2.2.3",
-diff --git a/src/cssloader.js b/src/cssloader.js
 new file mode 100644
-index 00000000000..93796789beb
 --- /dev/null
 +++ b/src/cssloader.js
 @@ -0,0 +1,58 @@
@@ -74,9 +70,7 @@ index 00000000000..93796789beb
 +	//const cssPath = path.resolve("/home/xaryphon/.vscode-oss-dev/extensions/cssloader.css");
 +	win.webContents.on("dom-ready", () => { _injectCss(win); });
 +}
-diff --git a/src/cssloader_config.js b/src/cssloader_config.js
 new file mode 100644
-index 00000000000..930c53a91c9
 --- /dev/null
 +++ b/src/cssloader_config.js
 @@ -0,0 +1,58 @@
@@ -138,9 +132,7 @@ index 00000000000..930c53a91c9
 +}
 +
 +module.exports = config
-diff --git a/src/glasscord_browser_window.js b/src/glasscord_browser_window.js
 new file mode 100644
-index 00000000000..06ba32b62dd
 --- /dev/null
 +++ b/src/glasscord_browser_window.js
 @@ -0,0 +1,53 @@
@@ -197,8 +189,6 @@ index 00000000000..06ba32b62dd
 +}
 +
 +module.exports = BrowserWindow;
-diff --git a/src/main.js b/src/main.js
-index 9cf737e0649..12dbfcfaaff 100644
 --- a/src/main.js
 +++ b/src/main.js
 @@ -70,6 +70,40 @@ if (portable && portable.isPortable) {
