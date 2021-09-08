@@ -1,13 +1,10 @@
 --- a/package.json
 +++ b/package.json
-@@ -61,6 +61,7 @@
-     "@vscode/vscode-languagedetection": "1.0.15",
-     "applicationinsights": "1.0.8",
-     "chokidar": "3.5.1",
+@@ -59,3 +59,4 @@
+   },
+   "dependencies": {
 +    "glasstron": "0.1.0",
-     "graceful-fs": "4.2.6",
-     "http-proxy-agent": "^2.1.0",
-     "https-proxy-agent": "^2.2.3",
+     "@microsoft/applicationinsights-web": "^2.6.4",
 new file mode 100644
 --- /dev/null
 +++ b/src/cssloader.js
@@ -194,7 +191,7 @@ new file mode 100644
 @@ -70,6 +70,40 @@ if (portable && portable.isPortable) {
  	app.setAppLogsPath(path.join(userDataPath, 'logs'));
  }
- 
+
 +function injectGlasscordClass() {
 +	// Replacing BrowserWindow with our wrapper class
 +	const electron = require('electron');
