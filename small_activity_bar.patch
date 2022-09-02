@@ -1,11 +1,11 @@
 --- a/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts
 +++ b/src/vs/workbench/browser/parts/activitybar/activitybarActions.ts
-@@ -447,10 +447,10 @@ registerThemingParticipant((theme, collector) => {
+@@ -447,10 +447,10 @@ collector.addRule(`
  			.monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .action-item:before {
  				content: "";
  				position: absolute;
--				top: 9px;
--				left: 9px;
+-				top: 8px;
+-				left: 8px;
 -				height: 32px;
 -				width: 32px;
 +				top: 5px;

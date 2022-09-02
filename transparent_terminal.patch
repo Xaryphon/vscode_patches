@@ -1,6 +1,6 @@
---- a/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts
-+++ b/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts
-@@ -571,6 +571,7 @@ export class TerminalInstance extends Disposable implements ITerminalInstance {
+--- a/src/vs/workbench/contrib/terminal/browser/xterm/xtermTerminal.ts
++++ b/src/vs/workbench/contrib/terminal/browser/xterm/xtermTerminal.ts
+@@ -152,6 +152,7 @@ export class XtermTerminal extends DisposableStore implements IXtermTerminal, II
  			altClickMovesCursor: config.altClickMovesCursor && editorOptions.multiCursorModifier === 'alt',
  			scrollback: config.scrollback,
  			theme: this._getXtermTheme(),

@@ -1,10 +1,14 @@
 --- a/package.json
 +++ b/package.json
-@@ -59,3 +59,4 @@
+@@ -60,6 +60,7 @@
+     "webview-generate-csp-hash": "npx github:apaatsio/csp-hash-from-html csp-hash ./src/vs/workbench/contrib/webview/browser/pre/index.html"
    },
    "dependencies": {
 +    "glasstron": "0.1.0",
-     "@microsoft/applicationinsights-web": "^2.6.4",
+     "@microsoft/1ds-core-js": "^3.2.2",
+     "@microsoft/1ds-post-js": "^3.2.2",
+     "@parcel/watcher": "2.0.5",
+
 new file mode 100644
 --- /dev/null
 +++ b/src/cssloader.js
